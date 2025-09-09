@@ -91,7 +91,7 @@ export default function GeneViewer({
         if (apiError) {
           setError(apiError);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load sequence data");
       } finally {
         setIsLoadingSequence(false);
@@ -126,14 +126,14 @@ export default function GeneViewer({
           await fetchGeneSequence(fetchedRange.start, fetchedRange.end);
         }
       } catch {
-        setError("Faield to load gene information. Please try again.");
+        setError("Failed to load gene information. Please try again.");
       } finally {
         setIsLoading(false);
       }
     };
 
-    initializeGeneData();
-  }, [gene, genomeId]);
+    void initializeGeneData();
+  }, [gene, genomeId, fetchGeneSequence]);
 
   const handleSequenceClick = useCallback(
     (position: number, nucleotide: string) => {
@@ -176,7 +176,7 @@ export default function GeneViewer({
     }
 
     setError(null);
-    fetchGeneSequence(start, end);
+    void fetchGeneSequence(start, end);
   }, [startPosition, endPosition, fetchGeneSequence, geneBounds]);
 
   const fetchClinvarVariants = async () => {
@@ -193,7 +193,7 @@ export default function GeneViewer({
       );
       setClinvarVariants(variants);
       console.log(variants);
-    } catch (error) {
+    } catch {
       setClinvarError("Failed to fetch ClinVar variants");
       setClinvarVariants([]);
     } finally {
@@ -203,9 +203,9 @@ export default function GeneViewer({
 
   useEffect(() => {
     if (geneBounds) {
-      fetchClinvarVariants();
+      void fetchClinvarVariants();
     }
-  }, [geneBounds]);
+  }, [geneBounds, fetchClinvarVariants]);
 
   const showComparison = (variant: ClinvarVariant) => {
     if (variant.evo2Result) {

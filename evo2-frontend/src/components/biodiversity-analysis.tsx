@@ -74,8 +74,8 @@ export default function BiodiversityAnalysis() {
       .filter((seq) => seq.sequence.trim() && validateSequence(seq.sequence.trim()))
       .map((seq) => ({
         sequence: seq.sequence.trim(),
-        sequence_id: seq.sequence_id || undefined,
-        taxonomic_group: seq.taxonomic_group || undefined,
+        sequence_id: seq.sequence_id ?? undefined,
+        taxonomic_group: seq.taxonomic_group ?? undefined,
       }));
 
     if (validSequences.length === 0) {
@@ -159,12 +159,12 @@ export default function BiodiversityAnalysis() {
                   <div className="flex gap-2">
                     <Input
                       placeholder="Sequence ID (optional)"
-                      value={seq.sequence_id || ""}
+                      value={seq.sequence_id ?? ""}
                       onChange={(e) => updateSequence(index, "sequence_id", e.target.value)}
                       className="h-8 w-32 border-[#3c4f3d]/10 text-xs"
                     />
                     <Select
-                      value={seq.taxonomic_group || "bacteria"}
+                      value={seq.taxonomic_group ?? "bacteria"}
                       onValueChange={(value) => updateSequence(index, "taxonomic_group", value)}
                     >
                       <SelectTrigger className="h-8 w-32 border-[#3c4f3d]/10">

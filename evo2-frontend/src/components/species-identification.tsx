@@ -15,7 +15,7 @@ import {
   type TaxonomyResult,
   identifySpeciesWithAPI,
 } from "~/utils/genome-api";
-import { Dna, Loader2, Search, RefreshCw } from "lucide-react";
+import { Dna, Loader2, Search } from "lucide-react";
 
 export default function SpeciesIdentification() {
   const [sequence, setSequence] = useState("");
@@ -266,7 +266,7 @@ export default function SpeciesIdentification() {
               <div className="p-4 bg-red-50 border border-red-200 rounded-md">
                 <div className="text-sm font-medium text-red-800 mb-1">Identification Failed</div>
                 <div className="text-sm text-red-700">
-                  {result.error_message || "Unknown error occurred during species identification"}
+                  {result.error_message ?? "Unknown error occurred during species identification"}
                 </div>
               </div>
             )}
