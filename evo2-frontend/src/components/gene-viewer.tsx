@@ -179,7 +179,7 @@ export default function GeneViewer({
     void fetchGeneSequence(start, end);
   }, [startPosition, endPosition, fetchGeneSequence, geneBounds]);
 
-  const fetchClinvarVariants = async () => {
+  const fetchClinvarVariants = useCallback(async () => {
     if (!gene.chrom || !geneBounds) return;
 
     setIsLoadingClinvar(true);
@@ -199,13 +199,23 @@ export default function GeneViewer({
     } finally {
       setIsLoadingClinvar(false);
     }
-  };
+  }, [gene.chrom, geneBounds, genomeId]);
+
+  // Debounced version to prevent rapid successive calls
+  const debouncedFetchClinvarVariants = useCallback(() => {
+    const timeoutId = setTimeout(() => {
+      void fetchClinvarVariants();
+    }, 500); // 500ms delay
+    
+    return () => clearTimeout(timeoutId);
+  }, [fetchClinvarVariants]);
 
   useEffect(() => {
     if (geneBounds) {
-      void fetchClinvarVariants();
+      const cleanup = debouncedFetchClinvarVariants();
+      return cleanup;
     }
-  }, [geneBounds, fetchClinvarVariants]);
+  }, [geneBounds, debouncedFetchClinvarVariants]);
 
   const showComparison = (variant: ClinvarVariant) => {
     if (variant.evo2Result) {

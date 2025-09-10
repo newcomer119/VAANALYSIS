@@ -1,4 +1,5 @@
 import { env } from "~/env";
+import { ncbiRateLimiter } from "./rate-limiter";
 
 export interface GenomeAssemblyFromSearch {
   id: string;
@@ -266,7 +267,10 @@ export async function fetchGeneDetails(geneId: string): Promise<{
   initialRange: { start: number; end: number } | null;
 }> {
   try {
-    const detailUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${geneId}&retmode=json`;
+    // Apply rate limiting
+    await ncbiRateLimiter.waitIfNeeded();
+    
+    const detailUrl = `/api/ncbi/gene-details?geneId=${geneId}`;
     const detailsResponse = await fetch(detailUrl);
 
     if (!detailsResponse.ok) {
@@ -373,6 +377,9 @@ export async function fetchClinvarVariants(
   geneBound: GeneBounds,
   genomeId: string,
 ): Promise<ClinvarVariant[]> {
+  // Apply rate limiting
+  await ncbiRateLimiter.waitIfNeeded();
+  
   const chromFormatted = chrom.replace(/^chr/i, "");
 
   const minBound = Math.min(geneBound.min, geneBound.max);
@@ -381,8 +388,7 @@ export async function fetchClinvarVariants(
   const positionField = genomeId === "hg19" ? "chrpos37" : "chrpos38";
   const searchTerm = `${chromFormatted}[chromosome] AND ${minBound}:${maxBound}[${positionField}]`;
 
-  const searchUrl =
-    "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi";
+  const searchUrl = "/api/ncbi/esearch";
   const searchParams = new URLSearchParams({
     db: "clinvar",
     term: searchTerm,
@@ -408,8 +414,7 @@ export async function fetchClinvarVariants(
 
   const variantIds = searchData.esearchresult.idlist;
 
-  const summaryUrl =
-    "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi";
+  const summaryUrl = "/api/ncbi/esummary";
   const summaryParams = new URLSearchParams({
     db: "clinvar",
     id: variantIds.join(","),
