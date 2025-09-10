@@ -4,7 +4,7 @@ class RateLimiter {
   private maxRequests: number;
   private windowMs: number;
 
-  constructor(maxRequests: number = 10, windowMs: number = 60000) {
+  constructor(maxRequests = 10, windowMs = 60000) {
     this.maxRequests = maxRequests;
     this.windowMs = windowMs;
   }

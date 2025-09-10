@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // Simple in-memory cache to reduce duplicate requests
-const cache = new Map<string, { data: any; timestamp: number }>();
+const cache = new Map<string, { data: unknown; timestamp: number }>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 async function fetchWithRetry(url: string, maxRetries = 3): Promise<Response> {
@@ -42,8 +43,8 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const db = searchParams.get('db');
   const term = searchParams.get('term');
-  const retmode = searchParams.get('retmode') || 'json';
-  const retmax = searchParams.get('retmax') || '20';
+  const retmode = searchParams.get('retmode') ?? 'json';
+  const retmax = searchParams.get('retmax') ?? '20';
 
   if (!db || !term) {
     return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
@@ -59,7 +60,7 @@ export async function GET(request: NextRequest) {
   try {
     const ncbiUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=${db}&term=${encodeURIComponent(term)}&retmode=${retmode}&retmax=${retmax}`;
     const response = await fetchWithRetry(ncbiUrl);
-    const data = await response.json();
+    const data = await response.json() as unknown;
     
     // Cache the result
     cache.set(cacheKey, { data, timestamp: Date.now() });

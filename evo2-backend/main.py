@@ -146,12 +146,11 @@ class BatchTaxonomyResult(BaseModel):
 # Modal image configuration with better transformer-engine compatibility
 evo2_image = (
     modal.Image.from_registry(
-        "nvidia/cuda:12.1-devel-ubuntu22.04", add_python="3.11"
+        "nvidia/cuda:12.4.0-devel-ubuntu22.04", add_python="3.11"
     )
     .apt_install([
         "build-essential", "cmake", "ninja-build",
-        "libcudnn8", "libcudnn8-dev", "git", "gcc", "g++",
-        "libcublas-dev", "libcublas12"
+        "libcudnn8", "libcudnn8-dev", "git", "gcc", "g++"
     ])
     .env({
         "CC": "/usr/bin/gcc",

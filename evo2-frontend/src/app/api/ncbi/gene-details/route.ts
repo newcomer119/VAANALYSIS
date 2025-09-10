@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // Simple in-memory cache to reduce duplicate requests
-const cache = new Map<string, { data: any; timestamp: number }>();
+const cache = new Map<string, { data: unknown; timestamp: number }>();
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes (gene details change less frequently)
 
 async function fetchWithRetry(url: string, maxRetries = 3): Promise<Response> {
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
   try {
     const ncbiUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&id=${geneId}&retmode=json`;
     const response = await fetchWithRetry(ncbiUrl);
-    const data = await response.json();
+    const data = await response.json() as unknown;
     
     // Cache the result
     cache.set(cacheKey, { data, timestamp: Date.now() });
