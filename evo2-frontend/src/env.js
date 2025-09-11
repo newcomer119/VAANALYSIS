@@ -18,6 +18,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_ANALYZE_SINGLE_VARIANT_BASE_URL: z.string(),
     NEXT_PUBLIC_ANALYZE_BIODIVERSITY_BASE_URL: z.string(),
+    NEXT_PUBLIC_IDENTIFY_SPECIES_BASE_URL: z.string(),
   },
 
   /**
@@ -30,6 +31,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_ANALYZE_SINGLE_VARIANT_BASE_URL,
     NEXT_PUBLIC_ANALYZE_BIODIVERSITY_BASE_URL:
       process.env.NEXT_PUBLIC_ANALYZE_BIODIVERSITY_BASE_URL,
+    NEXT_PUBLIC_IDENTIFY_SPECIES_BASE_URL:
+      process.env.NEXT_PUBLIC_IDENTIFY_SPECIES_BASE_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

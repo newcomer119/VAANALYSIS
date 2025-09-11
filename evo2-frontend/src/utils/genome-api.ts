@@ -525,10 +525,7 @@ export async function identifySpeciesWithAPI(
   sequenceId?: string,
   taxonomicGroup?: string
 ): Promise<TaxonomyResult> {
-  const url = env.NEXT_PUBLIC_ANALYZE_BIODIVERSITY_BASE_URL.replace(
-    "analyze-biodiversity",
-    "identify-species"
-  );
+  const url = env.NEXT_PUBLIC_IDENTIFY_SPECIES_BASE_URL;
 
   const response = await fetch(url, {
     method: "POST",
